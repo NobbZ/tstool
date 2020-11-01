@@ -29,6 +29,7 @@
           inherit (rustTooling) rust;
           inherit self;
         };
+        checks.build = self.packages.${system}.tstool;
 
         packages.tstool = rustTooling.rustPlatform.buildRustPackage {
           pname = package.name;

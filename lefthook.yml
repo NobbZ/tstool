@@ -1,0 +1,17 @@
+pre-push:
+  commands:
+    packages-audit:
+      run: cargo build --release
+
+pre-commit:
+  parallel: true
+  commands:
+    test:
+      glob: "{Cargo.{toml,lock},*.rs}"
+      run: cargo test
+    cargo-fmt:
+      glob: "{Cargo.{toml,lock},*.rs}"
+      run: cargo fmt -- --check
+    nix-fmt:
+      glob: "*.nix"
+      run: nixpkgs-fmt --check {staged_files}
