@@ -23,4 +23,4 @@ jobs:
         extra_nix_config: experimental-features = nix-command flakes
     - uses: cachix/cachix-action@v6
       with: { name: nobbz, signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}' }
-    - run: nix build .#checks.x64_86-linux.${{ matrix.checkname }} -L
+    - run: nix build .#checks.x86_64-linux.${{ matrix.checkname }} -L
