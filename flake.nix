@@ -38,7 +38,7 @@
 
           buildInputs = [ pkgs.makeWrapper ];
 
-          cargoSha256 = "sha256-vuGJM+rxGNINtU9id2WLIXz+WPz+JBs3e3Q+lPN732o=";
+          cargoSha256 = "sha256-vEoBXYMFhEnMT6U+zZ5Edso5QFDFMTFcRK5Z4a4z1fg=";
 
           postInstall = ''
             wrapProgram $out/bin/tstool \
