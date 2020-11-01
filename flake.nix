@@ -24,9 +24,13 @@
           inherit (rustTooling) rust;
         };
 
-        checks.formatting = pkgs.callPackage ./nix/checks/formatting.nix {
+        checks.cargo-fmt = pkgs.callPackage ./nix/checks/cargo-fmt.nix {
           inherit (package) name version;
           inherit (rustTooling) rust;
+          inherit self;
+        };
+        checks.nix-fmt = pkgs.callPackage ./nix/checks/nix-fmt.nix {
+          inherit (package) name version;
           inherit self;
         };
         checks.build = self.packages.${system}.tstool;

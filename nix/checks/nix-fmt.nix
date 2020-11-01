@@ -1,4 +1,4 @@
-{ stdenvNoCC, self, name, version, rustfmt, nixpkgs-fmt, rust }:
+{ stdenvNoCC, self, name, version, nixpkgs-fmt }:
 
 stdenvNoCC.mkDerivation {
   pname = "${name}-check";
@@ -8,10 +8,7 @@ stdenvNoCC.mkDerivation {
 
   src = self;
 
-  buildInputs = [ rustfmt ];
-
   buildPhase = ''
     ${nixpkgs-fmt}/bin/nixpkgs-fmt --check **/*.nix *.nix | tee $out
-    ${rust}/bin/cargo fmt -- --check | tee $out
   '';
 }
