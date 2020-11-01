@@ -24,18 +24,10 @@
           inherit (rustTooling) rust;
         };
 
-        checks.formatting = pkgs.stdenvNoCC.mkDerivation {
-          name = "${package.name}-check";
-          inherit (package) version;
-
-          src = self;
-
-          buildInputs = [ pkgs.rustfmt ];
-
-          buildPhase = ''
-            ${pkgs.nixpkgs-fmt}/bin/nixpkgs-fmt --check **/*.nix *.nix
-            ${rustTooling.rust}/bin/cargo fmt -- --check
-          '';
+        checks.formatting = pkgs.callPackage ./nix/checks/formatting.nix {
+          inherit (package) name version;
+          inherit (rustTooling) rust;
+          inherit self;
         };
 
         packages.tstool = rustTooling.rustPlatform.buildRustPackage {
