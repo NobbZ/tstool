@@ -2,17 +2,22 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-20.09";
     flake-utils.url = "github:numtide/flake-utils";
+    naersk = { url = "github:nmattia/naersk"; inputs.nixpkgs.follows = "nixpkgs"; };
 
     mozilla = { url = "github:mozilla/nixpkgs-mozilla"; flake = false; };
   };
 
-  outputs = { self, nixpkgs, flake-utils, mozilla }@inputs:
+  outputs = { self, nixpkgs, flake-utils, naersk, mozilla }@inputs:
     flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ (import mozilla) ];
+          overlays = [
+            (import mozilla)
+            (self: super: { rustc = rustTooling.rust; cargo = rustTooling.rust; })
+          ];
         };
+        naerskLib = pkgs.callPackage naersk { };
 
         rustTooling = (pkgs.callPackage ./nix/rust_platform.nix { });
 
@@ -35,7 +40,7 @@
         };
         checks.build = self.packages.${system}.tstool;
 
-        packages.tstool = rustTooling.rustPlatform.buildRustPackage {
+        packages.tstool = naerskLib.buildPackage {
           pname = package.name;
           inherit (package) version;
 
@@ -43,11 +48,15 @@
 
           buildInputs = [ pkgs.makeWrapper ];
 
-          cargoSha256 = "sha256-vEoBXYMFhEnMT6U+zZ5Edso5QFDFMTFcRK5Z4a4z1fg=";
+          # cargoSha256 = "sha256-vEoBXYMFhEnMT6U+zZ5Edso5QFDFMTFcRK5Z4a4z1fg=";
 
           postInstall = ''
-            wrapProgram $out/bin/tstool \
-              --add-flags "--prefix ${placeholder "out"}/usr"
+            # runs wrapProgram only when in main derivations hook, as the same
+            # hook is called for deps derivation as well
+            if [ -d $out/bin ]; then
+              wrapProgram $out/bin/tstool \
+                --add-flags "--prefix ${placeholder "out"}/usr"
+            fi
           '';
         };
       });
