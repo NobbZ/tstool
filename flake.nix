@@ -54,8 +54,12 @@
             # runs wrapProgram only when in main derivations hook, as the same
             # hook is called for deps derivation as well
             if [ -d $out/bin ]; then
+              ROCKET_TEMPLATE_DIR=$out/share/tstool/templates
+              install -d $ROCKET_TEMPLATE_DIR
+              cp -r templates/* $ROCKET_TEMPLATE_DIR
+
               wrapProgram $out/bin/tstool \
-                --add-flags "--prefix ${placeholder "out"}/usr"
+                --set ROCKET_TEMPLATE_DIR $ROCKET_TEMPLATE_DIR
             fi
           '';
         };
