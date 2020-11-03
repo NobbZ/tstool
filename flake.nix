@@ -48,8 +48,6 @@
 
           buildInputs = [ pkgs.makeWrapper ];
 
-          # cargoSha256 = "sha256-vEoBXYMFhEnMT6U+zZ5Edso5QFDFMTFcRK5Z4a4z1fg=";
-
           overrideMain = oa: {
             postInstall = ''
               ROCKET_TEMPLATE_DIR=$out/share/tstool/templates
