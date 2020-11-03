@@ -12,14 +12,14 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [
-            (import mozilla)
-            (self: super: { rustc = rustTooling.rust; cargo = rustTooling.rust; })
-          ];
+          overlays = [ (import mozilla) ];
         };
-        naerskLib = pkgs.callPackage naersk { };
+        naerskLib = pkgs.callPackage naersk {
+          cargo = rustTooling.rust;
+          rustc = rustTooling.rust;
+        };
 
-        rustTooling = (pkgs.callPackage ./nix/rust_platform.nix { });
+        rustTooling = pkgs.callPackage ./nix/rust_platform.nix { };
 
         package = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package;
       in
@@ -50,18 +50,16 @@
 
           # cargoSha256 = "sha256-vEoBXYMFhEnMT6U+zZ5Edso5QFDFMTFcRK5Z4a4z1fg=";
 
-          postInstall = ''
-            # runs wrapProgram only when in main derivations hook, as the same
-            # hook is called for deps derivation as well
-            if [ -d $out/bin ]; then
+          overrideMain = oa: {
+            postInstall = ''
               ROCKET_TEMPLATE_DIR=$out/share/tstool/templates
               install -d $ROCKET_TEMPLATE_DIR
               cp -r templates/* $ROCKET_TEMPLATE_DIR
 
               wrapProgram $out/bin/tstool \
                 --set ROCKET_TEMPLATE_DIR $ROCKET_TEMPLATE_DIR
-            fi
-          '';
+            '';
+          };
         };
       });
 }
