@@ -40,24 +40,10 @@
         };
         checks.build = self.packages.${system}.tstool;
 
-        packages.tstool = naerskLib.buildPackage {
-          pname = package.name;
-          inherit (package) version;
-
-          src = self;
-
-          buildInputs = [ pkgs.makeWrapper ];
-
-          overrideMain = oa: {
-            postInstall = ''
-              ROCKET_TEMPLATE_DIR=$out/share/tstool/templates
-              install -d $ROCKET_TEMPLATE_DIR
-              cp -r templates/* $ROCKET_TEMPLATE_DIR
-
-              wrapProgram $out/bin/tstool \
-                --set ROCKET_TEMPLATE_DIR $ROCKET_TEMPLATE_DIR
-            '';
-          };
+        packages.tstool = pkgs.callPackage ./nix/packages/tstool.nix {
+          inherit (package) name version;
+          inherit (rustTooling) rustPlatform;
+          inherit self naersk;
         };
       });
 }
