@@ -1,0 +1,12 @@
+{% extends "base" %}
+
+{% block title %}{{ name }} - a tool {% endblock title %}
+
+{% block content %}
+<table>
+  <tr>
+    <td>Name</td>
+    <td>{{ name }}</td>
+  </tr>
+</table>
+{% endblock content %}
