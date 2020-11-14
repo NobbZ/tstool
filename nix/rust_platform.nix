@@ -1,9 +1,9 @@
 { rustChannelOf, makeRustPlatform }:
 let
   rustChannel = rustChannelOf {
-    date = "2020-10-30";
+    date = "2020-11-14";
     channel = "nightly";
-    sha256 = "sha256-4NFISQPmGjbz534No4/ZbXaHT5xbjU25WXgj1MTH0TA=";
+    sha256 = "sha256-1LPuJj+z1fRwzzEUDct2mtKwxv7nO9lspU7QFYigiOw=";
   };
 in
 rec {

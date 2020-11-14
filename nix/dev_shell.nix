@@ -5,7 +5,7 @@ mkShell {
   inherit version;
 
   buildInputs = [
-    (rust.override { extensions = [ "rust-src" ]; })
+    (rust.override { extensions = [ "rust-src" "rls-preview" "rust-analysis" ]; })
     nixpkgs-fmt
     rustfmt
     lefthook
