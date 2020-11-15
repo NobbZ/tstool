@@ -54,6 +54,8 @@ where
         result.push(t)
     }
 
+    info!(log, "leaving folder {}", folder.display());
+
     result
 }
 
