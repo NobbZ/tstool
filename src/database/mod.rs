@@ -6,32 +6,28 @@ use std::{
     sync::Mutex,
 };
 
-use lazy_static::lazy_static;
 use serde::de::DeserializeOwned;
 use slog::{debug, info, Logger};
 
+use itemtype::ITEMTYPES;
 pub use quest::QuestRef;
+use quest::QUESTS;
 pub use referer::Referer;
 pub use region::RegionRef;
 pub use skill::SkillBonus;
+use skill::SKILLS;
+use task::TASKS;
 pub use task::{Task, TaskRef};
 pub use tool::Tool;
+use tool::TOOLS;
 
+mod itemtype;
 mod quest;
 mod referer;
 mod region;
 mod skill;
 mod task;
 mod tool;
-
-lazy_static! {
-    static ref TOOLS: Mutex<HashMap<String, Tool>> = Mutex::new(HashMap::new());
-    static ref ITEMTYPES: Mutex<HashMap<String, ()>> =
-        Mutex::new(HashMap::new());
-    static ref SKILLS: Mutex<HashMap<String, ()>> = Mutex::new(HashMap::new());
-    static ref TASKS: Mutex<HashMap<String, Task>> = Mutex::new(HashMap::new());
-    static ref QUESTS: Mutex<HashMap<String, ()>> = Mutex::new(HashMap::new());
-}
 
 fn read_files<'de, T, P>(log: &Logger, p: P) -> Vec<T>
 where

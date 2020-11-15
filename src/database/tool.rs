@@ -1,6 +1,18 @@
-use super::{skill::SkillBonus, QuestRef, Referer, TaskRef};
+use std::{
+    collections::HashMap,
+    fmt::{self, Display},
+    sync::Mutex,
+};
+
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
-use std::fmt::{self, Display};
+
+use super::{skill::SkillBonus, QuestRef, Referer, TaskRef};
+
+lazy_static! {
+    pub(super) static ref TOOLS: Mutex<HashMap<String, Tool>> =
+        Mutex::new(HashMap::new());
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(deny_unknown_fields)]
