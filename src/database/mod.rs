@@ -9,13 +9,15 @@ use std::{
 use serde::de::DeserializeOwned;
 use slog::{debug, info, Logger};
 
+pub use itemtype::Itemtype;
 use itemtype::ITEMTYPES;
-pub use quest::QuestRef;
 use quest::QUESTS;
+pub use quest::{Quest, QuestRef};
 pub use referer::Referer;
-pub use region::RegionRef;
-pub use skill::SkillBonus;
+use region::REGIONS;
+pub use region::{Region, RegionRef};
 use skill::SKILLS;
+pub use skill::{Skill, SkillBonus};
 use task::TASKS;
 pub use task::{Task, TaskRef};
 pub use tool::Tool;
@@ -75,12 +77,44 @@ where
 {
     let mut errors: HashSet<String> = HashSet::new();
 
-    let tools = read_files::<Tool, _>(log, &get_path(&base, "item"));
+    let itemtypes =
+        read_files::<Itemtype, _>(log, &get_path(&base, "itemtype"));
+    let quests = read_files::<Quest, _>(log, &get_path(&base, "quest"));
+    let regions = read_files::<Region, _>(log, &get_path(&base, "region"));
+    let skills = read_files::<Skill, _>(log, &get_path(&base, "skill"));
     let tasks = read_files::<Task, _>(log, &get_path(&base, "task"));
+    let tools = read_files::<Tool, _>(log, &get_path(&base, "item"));
 
-    let mut tool_map = TOOLS.lock().unwrap();
+    for itemtype in &itemtypes {
+        ITEMTYPES
+            .lock()
+            .unwrap()
+            .insert(itemtype.id.clone(), itemtype.clone());
+    }
+
+    for quest in &quests {
+        QUESTS
+            .lock()
+            .unwrap()
+            .insert(quest.id.clone(), quest.clone());
+    }
+
+    for region in &regions {
+        REGIONS
+            .lock()
+            .unwrap()
+            .insert(region.id.clone(), region.clone());
+    }
+
+    for skill in &skills {
+        SKILLS
+            .lock()
+            .unwrap()
+            .insert(skill.id.clone(), skill.clone());
+    }
+
     for tool in &tools {
-        tool_map.insert(tool.id.clone(), tool.clone());
+        TOOLS.lock().unwrap().insert(tool.id.clone(), tool.clone());
     }
 
     for task in &tasks {
