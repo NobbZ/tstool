@@ -18,6 +18,11 @@ fn tool() -> Template {
         "tool/show",
         Tool {
             name: "fnoo".into(),
+            id: "".into(),
+            itemtype: "".into(),
+            quests: vec![],
+            skills: vec![],
+            tasks: None,
         },
     )
 }

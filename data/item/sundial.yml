@@ -1,0 +1,9 @@
+name: Sundial
+id: 43cdfe5e-b4b6-e211-be8c-782bcb902040
+itemtype: f8d2fe5e-b4b6-e211-be8c-782bcb902040 # Tool
+skills:
+- { value: 10, skill: 731c9e5f-b4b6-e211-be8c-782bcb902040 } # Investigation
+- { value: 10, skill: b31c9e5f-b4b6-e211-be8c-782bcb902040 } # Vigilance
+quests:
+- quest: c3e0fe5e-b4b6-e211-be8c-782bcb902040 # Devenir vigile
+- quest: bee0fe5e-b4b6-e211-be8c-782bcb902040 # Devenir investigateur

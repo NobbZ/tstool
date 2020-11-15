@@ -1,0 +1,11 @@
+name: Bestiary
+id: 42cdfe5e-b4b6-e211-be8c-782bcb902040
+itemtype: f8d2fe5e-b4b6-e211-be8c-782bcb902040 # Tool
+skills:
+- { value: 5, skill: 361c9e5f-b4b6-e211-be8c-782bcb902040 } # Hunting
+- { value: 5, skill: 501c9e5f-b4b6-e211-be8c-782bcb902040 } # Taming
+- { value: 5, skill: 551c9e5f-b4b6-e211-be8c-782bcb902040 } # Breeding
+tasks:
+- task: 8b229e5f-b4b6-e211-be8c-782bcb902040 # Field: fauna
+quests:
+- quest: 40e1fe5e-b4b6-e211-be8c-782bcb902040 # Fauna trades
