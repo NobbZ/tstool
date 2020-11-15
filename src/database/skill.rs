@@ -19,14 +19,24 @@ pub struct SkillBonus {
     pub skill: String,
 }
 
+// TODO: Better name and place
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(deny_unknown_fields)]
+pub struct SkillTraining {
+    pub limit: i8,
+    pub task: String,
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct Skill {
     pub id: String,
+    pub name: String,
+    pub training: Vec<SkillTraining>,
 }
 
 impl Display for Skill {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        todo!("Quest::fmt not implemented yet")
+        write!(f, "{}", self.name)
     }
 }

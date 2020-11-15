@@ -1,0 +1,5 @@
+name: Investigation
+id: 731c9e5f-b4b6-e211-be8c-782bcb902040
+training:
+- { limit: 1, task: 08249e5f-b4b6-e211-be8c-782bcb902040 } # Trade: Investigator
+- { limit: 6, task: 56219e5f-b4b6-e211-be8c-782bcb902040 } # Basics of investigation
