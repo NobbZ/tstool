@@ -1,17 +1,28 @@
-use lazy_static::lazy_static;
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
-use slog::{info, Logger};
 use std::{
     collections::{HashMap, HashSet},
-    fmt::{self, Display},
+    fmt::Display,
     fs,
     path::{Path, PathBuf},
     sync::Mutex,
 };
 
-mod tool;
+use lazy_static::lazy_static;
+use serde::de::DeserializeOwned;
+use slog::{debug, info, Logger};
 
+pub use quest::QuestRef;
+pub use referer::Referer;
+pub use region::RegionRef;
+pub use skill::SkillBonus;
+pub use task::{Task, TaskRef};
 pub use tool::Tool;
+
+mod quest;
+mod referer;
+mod region;
+mod skill;
+mod task;
+mod tool;
 
 lazy_static! {
     static ref TOOLS: Mutex<HashMap<String, Tool>> = Mutex::new(HashMap::new());
@@ -20,60 +31,6 @@ lazy_static! {
     static ref SKILLS: Mutex<HashMap<String, ()>> = Mutex::new(HashMap::new());
     static ref TASKS: Mutex<HashMap<String, Task>> = Mutex::new(HashMap::new());
     static ref QUESTS: Mutex<HashMap<String, ()>> = Mutex::new(HashMap::new());
-}
-
-trait Identifyable {
-    fn id(&self) -> String;
-}
-
-trait Referer {
-    fn itemtype_ids(&self) -> Vec<String>;
-    fn skill_ids(&self) -> Vec<String>;
-    fn task_ids(&self) -> Vec<String>;
-    fn quest_ids(&self) -> Vec<String>;
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(deny_unknown_fields)]
-pub struct SkillBonus {
-    pub value: i8,
-    pub skill: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(deny_unknown_fields)]
-pub struct TaskRef {
-    pub task: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(deny_unknown_fields)]
-pub struct RegionRef {
-    pub region: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(deny_unknown_fields)]
-pub struct QuestRef {
-    pub quest: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(deny_unknown_fields)]
-pub struct Task {
-    pub name: String,
-    pub id: String,
-    pub duration: String, // TODO: make this some proper duration type
-    pub cost: i64,
-    pub difficulty: Vec<SkillBonus>,
-    pub result: Vec<HashMap<String, String>>, // TODO: Proper enum with variants
-    pub regions: Vec<RegionRef>,
-}
-
-impl Display for Task {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.name)
-    }
 }
 
 fn read_files<'de, T, P>(log: &Logger, p: P) -> Vec<T>
@@ -142,11 +99,13 @@ where
         &tools.iter().flat_map(|tool| tool.task_ids()).collect();
     let quest_ids: &Vec<_> =
         &tools.iter().flat_map(|tool| tool.quest_ids()).collect();
-    info!(log, "tools: {:?}", tools);
-    info!(log, "itemtypes: {:?}", itemtype_ids);
-    info!(log, "skills: {:?}", skill_ids);
-    info!(log, "tasks: {:?}", task_ids);
-    info!(log, "quests: {:?}", quest_ids);
+
+    debug!(log, "tools: {:?}", tools);
+    debug!(log, "itemtypes: {:?}", itemtype_ids);
+    debug!(log, "skills: {:?}", skill_ids);
+    debug!(log, "tasks: {:?}", task_ids);
+    debug!(log, "quests: {:?}", quest_ids);
+
     for itemtype_id in itemtype_ids {
         if !ITEMTYPES.lock().unwrap().contains_key(itemtype_id) {
             errors.insert(format!(

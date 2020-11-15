@@ -1,4 +1,4 @@
-use super::{Identifyable, QuestRef, Referer, SkillBonus, TaskRef};
+use super::{skill::SkillBonus, QuestRef, Referer, TaskRef};
 use serde::{Deserialize, Serialize};
 use std::fmt::{self, Display};
 
@@ -13,12 +13,6 @@ pub struct Tool {
     pub quests: Vec<QuestRef>,
 }
 
-impl Identifyable for Tool {
-    fn id(&self) -> String {
-        self.id.clone()
-    }
-}
-
 impl Display for Tool {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.name)
@@ -26,6 +20,10 @@ impl Display for Tool {
 }
 
 impl Referer for Tool {
+    fn id(&self) -> String {
+        self.id.clone()
+    }
+
     fn itemtype_ids(&self) -> Vec<String> {
         vec![self.itemtype.clone()]
     }
