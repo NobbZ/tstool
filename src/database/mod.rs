@@ -106,44 +106,33 @@ where
     debug!(log, "tasks: {:?}", task_ids);
     debug!(log, "quests: {:?}", quest_ids);
 
-    for itemtype_id in itemtype_ids {
-        if !ITEMTYPES.lock().unwrap().contains_key(itemtype_id) {
-            errors.insert(format!(
-                "http://guide.theriansaga-wiki.ru/en/itemtype/{}",
-                itemtype_id
-            ));
-        }
-    }
-    for skill_id in skill_ids {
-        if !SKILLS.lock().unwrap().contains_key(skill_id) {
-            errors.insert(format!(
-                "http://guide.theriansaga-wiki.ru/en/skill/{}",
-                skill_id,
-            ));
-        }
-    }
-    for task_id in task_ids {
-        if !SKILLS.lock().unwrap().contains_key(task_id) {
-            errors.insert(format!(
-                "http://guide.theriansaga-wiki.ru/en/task/{}",
-                task_id,
-            ));
-        }
-    }
-    for quest_id in quest_ids {
-        if !SKILLS.lock().unwrap().contains_key(quest_id) {
-            errors.insert(format!(
-                "http://guide.theriansaga-wiki.ru/en/quest/{}",
-                quest_id,
-            ));
-        }
-    }
+    check_ids(&mut errors, &ITEMTYPES, itemtype_ids, "itemtype");
+    check_ids(&mut errors, &SKILLS, skill_ids, "skill");
+    check_ids(&mut errors, &TASKS, task_ids, "task");
+    check_ids(&mut errors, &QUESTS, quest_ids, "quest");
 
-    info!(log, "errors: {:?}", errors);
+    debug!(log, "collected errors: {:?}", errors);
 
     if !errors.is_empty() {
         return Err(errors.iter().cloned().collect());
     }
 
     Ok(())
+}
+
+fn check_ids<T>(
+    errors: &mut HashSet<String>,
+    hm: &Mutex<HashMap<String, T>>,
+    ids: &[String],
+    label: &str,
+) {
+    for id in ids {
+        if !hm.lock().unwrap().contains_key(id) {
+            errors.insert(format!(
+                "http://guide.theriansaga-wiki.ru/en/{label}/{id}",
+                label = label,
+                id = id
+            ));
+        }
+    }
 }
