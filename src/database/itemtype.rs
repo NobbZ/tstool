@@ -21,6 +21,6 @@ pub struct Itemtype {
 
 impl Display for Itemtype {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        todo!("Itemtype::fmt not implemented yet")
+        write!(f, "{}", self.name)
     }
 }
