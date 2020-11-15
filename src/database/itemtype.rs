@@ -16,6 +16,7 @@ lazy_static! {
 #[serde(deny_unknown_fields)]
 pub struct Itemtype {
     pub id: String,
+    pub name: String,
 }
 
 impl Display for Itemtype {
