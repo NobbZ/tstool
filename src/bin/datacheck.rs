@@ -3,7 +3,7 @@ use slog_async;
 use slog_term;
 use tstool::database;
 
-fn main() {
+fn main() -> Result<(), ()> {
     let deco = slog_term::PlainDecorator::new(std::io::stdout());
     let drain = slog_term::CompactFormat::new(deco).build().fuse();
     let drain = slog_async::Async::new(drain).build().fuse();
@@ -11,7 +11,7 @@ fn main() {
     let log = slog::Logger::root(drain, o!("version" => "0.5"));
 
     match database::load_from_files(&log, ".") {
-        Ok(()) => info!(log, "Success!"),
-        Err(v) => error!(log, "{:?}", v),
+        Ok(()) => Ok(info!(log, "Success!")),
+        Err(v) => Err(error!(log, "{:?}", v)),
     }
 }

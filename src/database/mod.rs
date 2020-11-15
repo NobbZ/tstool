@@ -9,6 +9,10 @@ use std::{
     sync::Mutex,
 };
 
+mod tool;
+
+pub use tool::Tool;
+
 lazy_static! {
     static ref TOOLS: Mutex<HashMap<String, Tool>> = Mutex::new(HashMap::new());
     static ref ITEMTYPES: Mutex<HashMap<String, ()>> =
@@ -20,6 +24,13 @@ lazy_static! {
 
 trait Identifyable {
     fn id(&self) -> String;
+}
+
+trait Referer {
+    fn itemtype_ids(&self) -> Vec<String>;
+    fn skill_ids(&self) -> Vec<String>;
+    fn task_ids(&self) -> Vec<String>;
+    fn quest_ids(&self) -> Vec<String>;
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -49,17 +60,6 @@ pub struct QuestRef {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(deny_unknown_fields)]
-pub struct Tool {
-    pub name: String,
-    pub id: String,
-    pub itemtype: String,
-    pub skills: Vec<SkillBonus>,
-    pub tasks: Vec<TaskRef>,
-    pub quests: Vec<QuestRef>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-#[serde(deny_unknown_fields)]
 pub struct Task {
     pub name: String,
     pub id: String,
@@ -68,18 +68,6 @@ pub struct Task {
     pub difficulty: Vec<SkillBonus>,
     pub result: Vec<HashMap<String, String>>, // TODO: Proper enum with variants
     pub regions: Vec<RegionRef>,
-}
-
-impl Identifyable for Tool {
-    fn id(&self) -> String {
-        self.id.clone()
-    }
-}
-
-impl Display for Tool {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.name)
-    }
 }
 
 impl Display for Task {
@@ -147,19 +135,13 @@ where
     }
 
     let itemtype_ids: &Vec<_> =
-        &tools.iter().map(|t| t.itemtype.clone()).collect();
-    let skill_ids: &Vec<_> = &tools
-        .iter()
-        .flat_map(|t| t.skills.iter().map(|s| s.skill.clone()))
-        .collect();
-    let task_ids: &Vec<_> = &tools
-        .iter()
-        .flat_map(|tool| tool.tasks.iter().map(|task| task.task.clone()))
-        .collect();
-    let quest_ids: &Vec<_> = &tools
-        .iter()
-        .flat_map(|tool| tool.quests.iter().map(|quest| quest.quest.clone()))
-        .collect();
+        &tools.iter().flat_map(|tool| tool.itemtype_ids()).collect();
+    let skill_ids: &Vec<_> =
+        &tools.iter().flat_map(|tool| tool.skill_ids()).collect();
+    let task_ids: &Vec<_> =
+        &tools.iter().flat_map(|tool| tool.task_ids()).collect();
+    let quest_ids: &Vec<_> =
+        &tools.iter().flat_map(|tool| tool.quest_ids()).collect();
     info!(log, "tools: {:?}", tools);
     info!(log, "itemtypes: {:?}", itemtype_ids);
     info!(log, "skills: {:?}", skill_ids);
