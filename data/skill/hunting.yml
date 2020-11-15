@@ -1,0 +1,5 @@
+name: Hunting
+id: 361c9e5f-b4b6-e211-be8c-782bcb902040
+training:
+- { limit: 1, task: fc239e5f-b4b6-e211-be8c-782bcb902040 } # Trade: Hunter
+- { limit: 6, task: 44219e5f-b4b6-e211-be8c-782bcb902040 } # Basics of Hunting
