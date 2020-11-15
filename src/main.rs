@@ -22,7 +22,7 @@ fn tool() -> Template {
             itemtype: "".into(),
             quests: vec![],
             skills: vec![],
-            tasks: None,
+            tasks: vec![],
         },
     )
 }

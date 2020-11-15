@@ -10,7 +10,7 @@ fn main() {
 
     let log = slog::Logger::root(drain, o!("version" => "0.5"));
 
-    match database::load_from_files(&log) {
+    match database::load_from_files(&log, ".") {
         Ok(()) => info!(log, "Success!"),
         Err(v) => error!(log, "{:?}", v),
     }

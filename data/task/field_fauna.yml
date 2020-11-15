@@ -1,0 +1,11 @@
+name: "Field: fauna"
+id: 8b229e5f-b4b6-e211-be8c-782bcb902040
+duration: 1:57:30
+difficulty:
+- { value: -1, skill: 5b1c9e5f-b4b6-e211-be8c-782bcb902040 } # Fauna
+cost: 5000
+result:
+- item: 42cdfe5e-b4b6-e211-be8c-782bcb902040 # Bestiary
+regions:
+- region: 25b5fb5b-b4b6-e211-be8c-782bcb902040 # Old Rabouf's cabin
+- region: 7d9d0a5c-b4b6-e211-be8c-782bcb902040 # Hunting camp
