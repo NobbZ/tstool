@@ -7,6 +7,8 @@ use std::{
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 
+use super::Referer;
+
 lazy_static! {
     pub(crate) static ref QUESTS: Mutex<HashMap<String, Quest>> =
         Mutex::new(HashMap::new());
@@ -27,5 +29,27 @@ pub struct Quest {
 impl Display for Quest {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         todo!("Quest::fmt not implemented yet")
+    }
+}
+
+impl Referer for Quest {
+    fn id(&self) -> String {
+        self.id.clone()
+    }
+
+    fn itemtype_ids(&self) -> Vec<String> {
+        todo!()
+    }
+
+    fn skill_ids(&self) -> Vec<String> {
+        todo!()
+    }
+
+    fn task_ids(&self) -> Vec<String> {
+        todo!()
+    }
+
+    fn quest_ids(&self) -> Vec<String> {
+        todo!()
     }
 }

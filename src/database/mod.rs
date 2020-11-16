@@ -87,41 +87,12 @@ where
     let tasks = read_files::<Task, _>(log, &get_path(&base, "task"));
     let tools = read_files::<Tool, _>(log, &get_path(&base, "item"));
 
-    for itemtype in &itemtypes {
-        ITEMTYPES
-            .lock()
-            .unwrap()
-            .insert(itemtype.id.clone(), itemtype.clone());
-    }
-
-    for quest in &quests {
-        QUESTS
-            .lock()
-            .unwrap()
-            .insert(quest.id.clone(), quest.clone());
-    }
-
-    for region in &regions {
-        REGIONS
-            .lock()
-            .unwrap()
-            .insert(region.id.clone(), region.clone());
-    }
-
-    for skill in &skills {
-        SKILLS
-            .lock()
-            .unwrap()
-            .insert(skill.id.clone(), skill.clone());
-    }
-
-    for tool in &tools {
-        TOOLS.lock().unwrap().insert(tool.id.clone(), tool.clone());
-    }
-
-    for task in &tasks {
-        TASKS.lock().unwrap().insert(task.id.clone(), task.clone());
-    }
+    store_to_map(&ITEMTYPES, &itemtypes);
+    store_to_map(&QUESTS, &quests);
+    store_to_map(&REGIONS, &regions);
+    store_to_map(&SKILLS, &skills);
+    store_to_map(&TOOLS, &tools);
+    store_to_map(&TASKS, &tasks);
 
     let itemtype_ids: &Vec<_> =
         &tools.iter().flat_map(|tool| tool.itemtype_ids()).collect();
@@ -150,6 +121,15 @@ where
     }
 
     Ok(())
+}
+
+fn store_to_map<T>(hm: &Mutex<HashMap<String, T>>, xs: &[T])
+where
+    T: Referer + Clone,
+{
+    for x in xs {
+        hm.lock().unwrap().insert(x.id().clone(), x.clone());
+    }
 }
 
 fn check_ids<T>(

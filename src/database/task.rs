@@ -7,7 +7,7 @@ use std::{
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 
-use super::{RegionRef, SkillBonus};
+use super::{Referer, RegionRef, SkillBonus};
 
 lazy_static! {
     pub(crate) static ref TASKS: Mutex<HashMap<String, Task>> =
@@ -35,5 +35,27 @@ pub struct Task {
 impl Display for Task {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.name)
+    }
+}
+
+impl Referer for Task {
+    fn id(&self) -> String {
+        self.id.clone()
+    }
+
+    fn itemtype_ids(&self) -> Vec<String> {
+        todo!()
+    }
+
+    fn skill_ids(&self) -> Vec<String> {
+        todo!()
+    }
+
+    fn task_ids(&self) -> Vec<String> {
+        todo!()
+    }
+
+    fn quest_ids(&self) -> Vec<String> {
+        todo!()
     }
 }
