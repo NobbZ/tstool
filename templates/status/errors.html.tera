@@ -1,0 +1,11 @@
+{% extends "base" %}
+
+{% block title %}There are errors{% endblock title %}
+
+{% block content %}
+<ul>
+  {% for error in errors | sort %}
+    <li><a href="{{ error }}">{{ error }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock content %}
